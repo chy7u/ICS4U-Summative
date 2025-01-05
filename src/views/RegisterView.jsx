@@ -2,6 +2,8 @@ import React from "react";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStoreContext } from "../context/GlobalState";
+import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "../firebase";
 import "./RegisterView.css";
 
 function RegisterView() {
@@ -14,6 +16,7 @@ function RegisterView() {
     setSelected,
     setSelectedNames,
     setCurrentGenre,
+    setUser
   } = useStoreContext();
 
   const navigate = useNavigate();
@@ -43,6 +46,19 @@ function RegisterView() {
   ];
 
   const checkBoxesRef = useRef({});
+
+  const registerByEmail = async(event) => {
+    event.preventDefault();
+
+    try {
+      const user = (await createUserWithEmailAndPassword(auth, email, password)).user;
+      await updatedProfile(user, { displayName: `${firstName} ${lastName}`});
+      setUser(user);
+      navigate('/movies');
+    } catch (error) {
+      alert("Error creating user with email and password!");
+    }
+  };
 
   //on submit
   function register(event) {
@@ -83,10 +99,8 @@ function RegisterView() {
       <div className="form-container">
         <h2>Create an Account</h2>
         <form
-          action="#"
-          method="POST"
           onSubmit={(event) => {
-            register(event);
+            registerByEmail(event);
           }}
         >
           <input

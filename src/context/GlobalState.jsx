@@ -1,5 +1,7 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import { Map } from 'immutable';
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
 
 //creates context
 export const StoreContext = createContext();
@@ -20,10 +22,21 @@ export const StoreProvider = ({ children }) => {
     const [selectedGenres, setSelected] = useState([]);
     const [selectedGenreNames, setSelectedNames] = useState([]);
     const [currentGenre, setCurrentGenre] = useState([]);
+    //user for firebase
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                setUser(user);
+            }
+        });
+    }, [])
 
     return (
         //value is initial values
         <StoreContext.Provider value={{
+            user, setUser,
             cartItems, setCartItems, 
             password, setPass, 
             genres, setGenres,
