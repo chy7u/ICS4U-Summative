@@ -1,0 +1,103 @@
+/* General Body Styling */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #121212; /* Dark background */
+    color: #fff; /* Light text for contrast */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align items at the start (top) */
+    height: 100vh; /* Full screen height */
+}
+
+/* Login Container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align content to the top */
+    height: 100%; /* Full viewport height */
+    margin-top: 50px; /* Move the box down by 50px */
+}
+
+/* Form Container */
+.form-container {
+    background-color: #1e1e1e; /* Slightly lighter dark background */
+    padding: 40px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px; /* Form max-width */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6); /* Subtle shadow around form */
+    text-align: center;
+}
+
+/* Heading */
+.form-container h2 {
+    font-size: 2.2em;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+/* Form Elements */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Label Styling */
+label {
+    text-align: left;
+    font-size: 1em;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+/* Input Fields */
+input[type="email"],
+input[type="password"] {
+    padding: 10px;
+    color: #fff; /* Light text inside input */
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #cc3333; /* Red border on focus */
+    outline: none;
+}
+
+/* Submit Button */
+.login-button {
+    padding: 12px;
+    background-color: #cc3333; /* Red background */
+    color: #fff; /* White text */
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #e54b4b; /* Lighter red on hover */
+}
+
+/* Register Link */
+.register-link {
+    font-size: 1em;
+    margin-top: 20px;
+    color: #bbb;
+}
+
+.register-link a {
+    color: #cc3333;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}

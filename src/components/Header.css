@@ -1,0 +1,164 @@
+.header {
+    background: rgb(5,20,49);
+    background: linear-gradient(0deg, rgba(5,20,49,1) 35%, rgba(31,44,69,1) 68%, rgba(60,74,99,1) 98%);
+    display: flex;
+    align-items:center;
+    justify-content: space-between;
+    height:8rem;
+    width:100vw;
+}
+
+.title {
+    color:#fff;
+    padding:30px;
+    font-size:50px;
+    font-weight:700;
+}
+
+/* navigation */                                                                                                                                                                                                                   
+
+.navigation > a {
+    color:#fff;
+    background:#cc6633;
+    font-size:20px;
+    text-decoration: none;
+    margin-right:50px;
+    padding:0.5rem;
+    outline:2px outset black;
+}
+
+.navigation button {
+    color:#fff;
+    background-color:#cc3333;
+    margin-inline:5px;
+    margin-right:40px;
+    margin-top:auto;
+    padding:0.5rem;
+    width:auto;
+}
+
+.navigation .Register > a {
+    color:#fff;
+    background-color:none;
+    font-size:20px;
+    text-decoration:none;
+}
+
+.navigation button:hover, 
+.navigation button:hover > a {
+    background-color:#fff;
+    color:#cc3333
+}
+
+.navigation a:hover {
+    background-color:#fff;
+    color:#cc6633;
+}
+
+/* navigation logged in*/
+
+.navigation-logged-in > a {
+    color:#fff;
+    background:#cc6633;
+    font-size:20px;
+    text-decoration: none;
+    margin-right:50px;
+    padding:0.5rem;
+    outline:2px outset black;
+}
+
+.navigation-logged-in button {
+    color:#fff;
+    background-color:#cc3333;
+    margin-inline:5px;
+    margin-right:40px;
+    margin-top:auto;
+    padding:0.5rem;
+    width:auto;
+}
+
+.navigation-logged-in .Cart > a {
+    color:#fff;
+    background-color:none;
+    font-size:20px;
+    text-decoration:none;
+}
+
+.navigation-logged-in .Log-Out {
+    color:#fff;
+    background-color:none;
+    font-size:20px;
+    text-decoration:none;
+}
+
+.navigation-logged-in button:hover, 
+.navigation-logged-in button:hover > a {
+    background-color:#fff;
+    color:#cc3333;
+    cursor: pointer;
+}
+
+.navigation a:hover {
+    background-color:#fff;
+    color:#cc6633;
+}
+
+/* drop down and its related styling */
+
+.dropdown {
+    position:relative;
+    display:inline-block;
+}
+
+.dropdown .drop-button {
+    font-size:20px;
+    margin-inline:5px;
+    margin-right:50px;
+    padding:0.5rem;
+    width:110px;
+}
+
+.dropdown:hover .drop-button {
+    background-color:#fff;
+    color:#cc3333;
+}
+
+.drop-content {
+    display:none;
+    position:absolute;
+    background-color:#cc3333;
+    min-width:160px;
+    box-shadow: 0px 8px 16px 0px rgb(37, 47, 63);
+    z-index:1;
+}
+
+.drop-content a {
+    float:none;
+    display:block;
+    color:black;
+    text-decoration: none;
+    padding: 12px 16px;
+    text-align:left;
+
+}
+
+.drop-content a:hover {
+    background-color:#fff;
+
+}
+
+.dropdown:hover .drop-content {
+    display:block;
+}
+
+.grid-col-span-3 {
+    grid-column: span 3;
+}
+
+.grid-col-span-2 {
+    grid-column: span 2;
+}
+
+.grid-row-span-2 {
+    grid-row:span 2;
+}

@@ -1,0 +1,47 @@
+/* hero section */
+.hero-section {
+    display: grid;
+    position: relative;
+    background-image: 
+        linear-gradient(to bottom, rgb(0,0,0,0.1), rgba(5,20,49,0.9)),
+        linear-gradient(to left, rgb(0,0,0,0.1), rgba(0,0,0,0.9)),
+        linear-gradient(to right, rgb(0,0,0,0.1), rgba(0,0,0,0.9)),
+        url('../../src/assets/moviesbackgroundherosection.jpg');  
+    background-size: cover;  
+    background-position: center; 
+    align-items: center;
+    grid-template-columns: repeat(5, 1fr); 
+    grid-template-rows: 1fr;
+    height: 100vh; 
+    padding: 0 5%; 
+}
+
+.hero-text > h1 {
+    font-size: 50px;
+    color: #fff;
+    margin: 0;
+    text-align: center; 
+    line-height: 1.2;
+}
+
+.hero-text {
+    grid-column: span 5; 
+    text-align: center; 
+}
+
+.column {
+    display: none;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+    .hero-section {
+        grid-template-columns: 1fr; 
+        grid-template-rows: 1fr; 
+        height: 100vh; 
+    }
+
+    .hero-text > h1 {
+        font-size: 30px; 
+    }
+}

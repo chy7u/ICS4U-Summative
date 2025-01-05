@@ -1,0 +1,27 @@
+.genres {
+    display:flex;
+    flex-direction:column;
+}
+
+.genre-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.genre-list button {
+    width: fit-content;
+    padding: 10px;
+    background-color: #cc3333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.genre-list button:hover {
+    background-color: #cc6633;
+}
