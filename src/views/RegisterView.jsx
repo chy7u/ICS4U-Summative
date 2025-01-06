@@ -1,5 +1,5 @@
 import React from "react";
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStoreContext } from "../context/GlobalState";
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -8,24 +8,25 @@ import "./RegisterView.css";
 
 function RegisterView() {
   const {
-    setFirst,
-    setLast,
-    setEmail,
-    setPass,
-    setGenres,
     setSelected,
     setSelectedNames,
     setCurrentGenre,
     setUser
   } = useStoreContext();
 
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const navigate = useNavigate();
 
-  const firstName = useRef("");
-  const lastName = useRef("");
-  const email = useRef("");
-  const password = useRef("");
-  const confirmedPass = useRef("");
+  //const firstName = useRef("");
+  //const lastName = useRef("");
+  //const email = useRef("");
+  //const password = useRef("");
+  //const confirmedPass = useRef("");
 
   const genres = [
     { genre: "Action", id: 28 },
@@ -47,18 +48,29 @@ function RegisterView() {
 
   const checkBoxesRef = useRef({});
 
-  const registerByEmail = async(event) => {
+  const registerByEmail = async (event) => {
     event.preventDefault();
 
     try {
       const user = (await createUserWithEmailAndPassword(auth, email, password)).user;
-      await updatedProfile(user, { displayName: `${firstName} ${lastName}`});
+      await updateProfile(user, { displayName: `${firstName} ${lastName}` });
       setUser(user);
       navigate('/movies');
     } catch (error) {
       alert("Error creating user with email and password!");
     }
   };
+
+  const registerByGoogle = async () => {
+    try {
+      const user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
+      setUser(user);
+      navigate('/movies');
+    } catch {
+      alert("Error creating user with email and password!");
+    }
+  }
+
 
   //on submit
   function register(event) {
@@ -93,81 +105,68 @@ function RegisterView() {
     navigate("/login");
   }
 
-  console.log(genres);
+  //console.log(genres);
   return (
     <div className="register-container">
       <div className="form-container">
         <h2>Create an Account</h2>
-        <form
-          onSubmit={(event) => {
-            registerByEmail(event);
-          }}
-        >
+        <form onSubmit={(e) => registerByEmail(e)}>
+          <label htmlFor="first-name">First Name</label>
           <input
             type="text"
-            id="firstName"
-            name="firstName"
-            placeholder="First Name"
-            ref={firstName}
+            id="first-name"
+            name="first-name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
             required
           />
+
+          <label htmlFor="last-name">Last Name</label>
           <input
             type="text"
-            id="lastName"
-            name="lastName"
-            placeholder="Last Name"
-            ref={lastName}
+            id="last-name"
+            name="last-name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
             required
           />
+
+          <label htmlFor="email">Email</label>
           <input
             type="email"
             id="email"
             name="email"
-            placeholder="Email"
-            ref={email}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
+
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
             name="password"
-            placeholder="Password"
-            ref={password}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
+
+          <label htmlFor="confirm-password">Confirm Password</label>
           <input
             type="password"
             id="confirm-password"
             name="confirm-password"
-            placeholder="Confirm Password"
-            ref={confirmedPass}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
 
-          <label htmlFor="check-genres">Genre Options:</label>
-          <div className="genresList">
-            {genres.map((item) => {
-              //maps through each genre item and creates checkbox
-              return (
-                <label key={item.id}>
-                  <input
-                    type="checkbox"
-                    id="check"
-                    ref={(el) => (checkBoxesRef.current[item.id] = el)}
-                  />{" "}
-                  {item.genre}
-                </label>
-              );
-            })}
-          </div>
-
-          <button type="submit" className="register-button">
-            Register
-          </button>
+          <button type="submit" className="register-button">Register</button>
         </form>
         <p className="login-link">
-          Already have an account? <a href="/login">Login</a>
+          Already have an account? <a href="#">Login</a>
         </p>
+        <button onClick={() => registerByGoogle()} className="register-button">Register by Google</button>
       </div>
     </div>
   );

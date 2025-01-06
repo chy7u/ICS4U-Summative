@@ -24,11 +24,16 @@ export const StoreProvider = ({ children }) => {
     const [currentGenre, setCurrentGenre] = useState([]);
     //user for firebase
     const [user, setUser] = useState(null);
+    const [cart, setCart] = useState(Map());
 
     useEffect(() => {
         onAuthStateChanged(auth, user => {
             if (user) {
                 setUser(user);
+                const sessionCart = localStorage.getItem(user.uid);
+                if (sessionCart) {
+                    setCart(Map(JSON.parse(sessionCart)));
+                }
             }
         });
     }, [])
@@ -37,6 +42,7 @@ export const StoreProvider = ({ children }) => {
         //value is initial values
         <StoreContext.Provider value={{
             user, setUser,
+            cart, setCart,
             cartItems, setCartItems, 
             password, setPass, 
             genres, setGenres,
