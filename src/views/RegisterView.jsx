@@ -45,7 +45,7 @@ function RegisterView() {
     { genre: "War", id: 10752 },
     { genre: "Western", id: 37}
   ];
-
+  console.log(firstName);
   const checkBoxesRef = useRef({});
 
   const registerByEmail = async (event) => {
@@ -57,6 +57,7 @@ function RegisterView() {
       setUser(user);
       navigate('/movies');
     } catch (error) {
+      console.log(error);
       alert("Error creating user with email and password!");
     }
   };

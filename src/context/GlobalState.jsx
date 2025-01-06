@@ -11,10 +11,10 @@ export const StoreProvider = ({ children }) => {
     //states to keep track of where user is
     const [loggedIn, setLoggedIn] = useState(false);
     //user info
-    const [firstName, setFirst] = useState("");
-    const [lastName, setLast] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPass] = useState("");
+    //const [firstName, setFirst] = useState("");
+    //const [lastName, setLast] = useState("");
+    //const [email, setEmail] = useState("");
+    //const [password, setPass] = useState("");
     //cart
     const [cartItems, setCartItems] = useState([]);
     //genres
@@ -44,11 +44,7 @@ export const StoreProvider = ({ children }) => {
             user, setUser,
             cart, setCart,
             cartItems, setCartItems, 
-            password, setPass, 
-            genres, setGenres,
-            email, setEmail, 
-            firstName, setFirst,
-            lastName, setLast,
+            genres, setGenres, 
             selectedGenres, setSelected,
             selectedGenreNames, setSelectedNames,
             currentGenre, setCurrentGenre,
