@@ -4,22 +4,22 @@ import './Header.css';
 
 function Header() {
     const {
-        loggedIn, setLoggedIn,
-        firstName
+        //loggedIn, setLoggedIn,
+        firstName,
+        user
     } = useStoreContext();
-    console.log(loggedIn);
+    //console.log(loggedIn);
 
     const navigate = useNavigate();
 
     function logout() {
-        setLoggedIn(false);
+        //setLoggedIn(false);
         navigate(`/`);
     }
-
     return (
         <div className="header">
             <div className="title">Notflix</div>
-            {!loggedIn ? (
+            {!(user) ? (
                 <div className="navigation">
                     <Link to={`/`} className="button">Home</Link>
                     <div className="dropdown">
