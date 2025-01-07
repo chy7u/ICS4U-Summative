@@ -9,7 +9,6 @@ import "./RegisterView.css";
 function RegisterView() {
   const {
     setSelected,
-    setSelectedNames,
     setCurrentGenre,
     setUser
   } = useStoreContext();
@@ -21,12 +20,6 @@ function RegisterView() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigate = useNavigate();
-
-  //const firstName = useRef("");
-  //const lastName = useRef("");
-  //const email = useRef("");
-  //const password = useRef("");
-  //const confirmedPass = useRef("");
 
   const genres = [
     { genre: "Action", id: 28 },
@@ -112,7 +105,6 @@ function RegisterView() {
     }
   }
 
-  //console.log(genres);
   return (
     <div className="register-container">
       <div className="form-container">
