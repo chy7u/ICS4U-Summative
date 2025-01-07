@@ -51,6 +51,26 @@ function RegisterView() {
   const registerByEmail = async (event) => {
     event.preventDefault();
 
+    const selectedGenresIds = Object.keys(checkBoxesRef.current)
+    .filter((genreId) => checkBoxesRef.current[genreId].checked)
+    .map(Number); // convert string ids to number
+
+    if (selectedGenresIds.length < 10) {
+      alert("You need at least 10 genres!");
+      return;
+    }
+
+    const selectedGenres = genres.filter((genre) =>
+      selectedGenresIds.includes(genre.id)
+    );
+
+    if (confirmPassword != password) {
+      alert("Your passwords don't match!");
+      return;
+    }
+    setSelected(selectedGenres);
+    setCurrentGenre(selectedGenresIds[0].genre);
+
     try {
       const user = (await createUserWithEmailAndPassword(auth, email, password)).user;
       await updateProfile(user, { displayName: `${firstName} ${lastName}` });
@@ -60,6 +80,9 @@ function RegisterView() {
       console.log(error);
       alert("Error creating user with email and password!");
     }
+  };
+
+  const registerByGoogle = async () => {
     const selectedGenresIds = Object.keys(checkBoxesRef.current)
     .filter((genreId) => checkBoxesRef.current[genreId].checked)
     .map(Number); // convert string ids to number
@@ -73,15 +96,13 @@ function RegisterView() {
       selectedGenresIds.includes(genre.id)
     );
 
-    if (confirmedPass.current.value != password.current.value) {
+    if (confirmPassword != password) {
       alert("Your passwords don't match!");
       return;
     }
     setSelected(selectedGenres);
     setCurrentGenre(selectedGenresIds[0].genre);
-  };
 
-  const registerByGoogle = async () => {
     try {
       const user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
       setUser(user);
@@ -89,60 +110,6 @@ function RegisterView() {
     } catch {
       alert("Error creating user with email and password!");
     }
-
-    const selectedGenresIds = Object.keys(checkBoxesRef.current)
-    .filter((genreId) => checkBoxesRef.current[genreId].checked)
-    .map(Number); // convert string ids to number
-
-    if (selectedGenresIds.length < 10) {
-      alert("You need at least 10 genres!");
-      return;
-    }
-
-    const selectedGenres = genres.filter((genre) =>
-      selectedGenresIds.includes(genre.id)
-    );
-
-    if (confirmedPass.current.value != password.current.value) {
-      alert("Your passwords don't match!");
-      return;
-    }
-    setSelected(selectedGenres);
-    setCurrentGenre(selectedGenresIds[0].genre);
-  }
-
-
-  //on submit
-  function register(event) {
-    event.preventDefault();
-
-    const selectedGenresIds = Object.keys(checkBoxesRef.current)
-      .filter((genreId) => checkBoxesRef.current[genreId].checked)
-      .map(Number); // convert string ids to number
-
-    if (selectedGenresIds.length < 10) {
-      alert("You need at least 10 genres!");
-      return;
-    }
-
-    const selectedGenres = genres.filter((genre) =>
-      selectedGenresIds.includes(genre.id)
-    );
-
-    if (confirmedPass.current.value != password.current.value) {
-      alert("Your passwords don't match!");
-      return;
-    }
-
-    setFirst(firstName.current.value);
-    setLast(lastName.current.value);
-    setEmail(email.current.value);
-    setPass(password.current.value);
-
-    setSelected(selectedGenres);
-    setCurrentGenre(selectedGenresIds[0].genre);
-
-    navigate("/login");
   }
 
   //console.log(genres);
@@ -200,8 +167,8 @@ function RegisterView() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-          <label htmlFor="check-genres">Genre Options:</label>
           
+          <label htmlFor="check-genres">Genre Options:</label>
           <div className="genresList">
             {genres.map((item) => {
               //maps through each genre item and creates checkbox
@@ -216,8 +183,8 @@ function RegisterView() {
                 </label>
               );
             })}
-          
           </div>
+
           <button type="submit" className="register-button">Register</button>
         </form>
         <p className="login-link">

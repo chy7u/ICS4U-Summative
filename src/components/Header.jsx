@@ -1,25 +1,28 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useStoreContext } from "../context/GlobalState";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 import './Header.css';
 
 function Header() {
     const {
         //loggedIn, setLoggedIn,
         firstName,
-        user
+        user, setUser
     } = useStoreContext();
     //console.log(loggedIn);
 
     const navigate = useNavigate();
 
     function logout() {
-        //setLoggedIn(false);
+        setUser(null);
+        signOut(auth);
         navigate(`/`);
     }
     return (
         <div className="header">
             <div className="title">Notflix</div>
-            {!(user) ? (
+            {!user ? (
                 <div className="navigation">
                     <Link to={`/`} className="button">Home</Link>
                     <div className="dropdown">
