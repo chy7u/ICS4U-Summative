@@ -60,6 +60,25 @@ function RegisterView() {
       console.log(error);
       alert("Error creating user with email and password!");
     }
+    const selectedGenresIds = Object.keys(checkBoxesRef.current)
+    .filter((genreId) => checkBoxesRef.current[genreId].checked)
+    .map(Number); // convert string ids to number
+
+    if (selectedGenresIds.length < 10) {
+      alert("You need at least 10 genres!");
+      return;
+    }
+
+    const selectedGenres = genres.filter((genre) =>
+      selectedGenresIds.includes(genre.id)
+    );
+
+    if (confirmedPass.current.value != password.current.value) {
+      alert("Your passwords don't match!");
+      return;
+    }
+    setSelected(selectedGenres);
+    setCurrentGenre(selectedGenresIds[0].genre);
   };
 
   const registerByGoogle = async () => {
@@ -70,6 +89,26 @@ function RegisterView() {
     } catch {
       alert("Error creating user with email and password!");
     }
+
+    const selectedGenresIds = Object.keys(checkBoxesRef.current)
+    .filter((genreId) => checkBoxesRef.current[genreId].checked)
+    .map(Number); // convert string ids to number
+
+    if (selectedGenresIds.length < 10) {
+      alert("You need at least 10 genres!");
+      return;
+    }
+
+    const selectedGenres = genres.filter((genre) =>
+      selectedGenresIds.includes(genre.id)
+    );
+
+    if (confirmedPass.current.value != password.current.value) {
+      alert("Your passwords don't match!");
+      return;
+    }
+    setSelected(selectedGenres);
+    setCurrentGenre(selectedGenresIds[0].genre);
   }
 
 
@@ -161,7 +200,24 @@ function RegisterView() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-
+          <label htmlFor="check-genres">Genre Options:</label>
+          
+          <div className="genresList">
+            {genres.map((item) => {
+              //maps through each genre item and creates checkbox
+              return (
+                <label key={item.id}>
+                  <input
+                    type="checkbox"
+                    id="check"
+                    ref={(el) => (checkBoxesRef.current[item.id] = el)}
+                  />{" "}
+                  {item.genre}
+                </label>
+              );
+            })}
+          
+          </div>
           <button type="submit" className="register-button">Register</button>
         </form>
         <p className="login-link">
