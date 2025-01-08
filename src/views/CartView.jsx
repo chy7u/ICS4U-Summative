@@ -31,6 +31,9 @@ function CartView() {
                             </button>
                         </div>
                     ))}
+                    <button> 
+                        Purchase
+                    </button>
                 </div>
             )}
         </div>
