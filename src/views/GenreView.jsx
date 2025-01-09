@@ -6,50 +6,61 @@ import "./GenreView.css";
 
 function GenreView() {
   const { 
-    selectedGenres, firstName
+    selectedGenres, firstName,
+    cartItems, setCartItems, user
   } = useStoreContext();
 
-    const { id } = useParams();
-    console.log("Genre ID:", id); //returning undefined??
-    const [movies, setMovies] = useState([]);
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-
-    const [previousId, setPreviousId] = useState(selectedGenres[0].id);
+  const { id } = useParams();
+  console.log("Genre ID:", id);
+  const [movies, setMovies] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [previousId, setPreviousId] = useState(selectedGenres[0].id);
   
-    useEffect(() => {
-      window.scrollTo(0, 0);
-      if (id !== previousId) {
-        setPage(1);
-        setPreviousId(id);
-      }
-
-      async function fetchMovies() {
-        try {
-          const response = await axios.get(
-            `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&with_genres=${id}&page=${page}`
-          );
-          setMovies(response.data.results);
-          setTotalPages(response.data.total_pages);
-          console.log("Genre ID:", id);
-        } catch (error) {
-          console.error("Error fetching movies:", error);
-        }
-      }
-      fetchMovies();
-    }, [id, page]);
-
-    function nextPage() {
-        if (page < totalPages) {
-            setPage(page + 1);
-        }
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (id !== previousId) {
+      setPage(1);
+      setPreviousId(id);
     }
-
-    function previousPage() {
-        if (page !== 1) {
-            setPage(page - 1);
-        }
+    async function fetchMovies() {
+      try {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&with_genres=${id}&page=${page}`
+        );
+        setMovies(response.data.results);
+        setTotalPages(response.data.total_pages);
+        console.log("Genre ID:", id);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
     }
+    fetchMovies();
+  }, [id, page]);
+
+  function nextPage() {
+      if (page < totalPages) {
+          setPage(page + 1);
+      }
+  }
+  function previousPage() {
+      if (page !== 1) {
+          setPage(page - 1);
+      }
+  }
+
+  // Modify to track added state per movie
+  const addToCart = (movie) => {
+    if (!cartItems.some(item => item.id === movie.id)) {
+      const updatedCart = [...cartItems, { 
+        id: movie.id,
+        title: movie.title,
+        poster: movie.poster_path,
+      }];
+      setCartItems(updatedCart);
+      localStorage.setItem(user.uid, JSON.stringify(updatedCart));
+    }
+  };  
 
   return (
     <div className="hero">
@@ -70,6 +81,14 @@ function GenreView() {
                   <div className="no-image">No Image Available</div>
                 )}
               </Link>
+
+              <button
+                className="addButton"
+                onClick={() => addToCart(movie)} // Pass the specific movie
+                disabled={cartItems.some(item => item.id === movie.id)}
+              >
+                {cartItems.some(item => item.id === movie.id) ? "Added" : "Add To Cart"}
+              </button>
             </div>
           ))
         ) : (

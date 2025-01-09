@@ -77,16 +77,6 @@ function DetailView() {
           <p className="detail-info"><span>Genres:</span> {movie.genres.map((g) => g.name).join(", ")}</p>
           <p className="detail-info"><span>Budget:</span> ${movie.budget}</p>
 
-          <button 
-            className="addButton"
-            onClick={addToCart}
-            disabled={added}
-          >
-
-            {added ? "Added" : "Add to Cart"}
-            
-          </button>
-
           {trailers.length > 0 && (
             <div className="trailer-section">
               <h3 className="trailer-text">Trailer:</h3>

@@ -38,7 +38,7 @@
 }
 
 .genre-view-item:hover .genre-view-image {
-    transform: scale(1.20);
+    transform: scale(1.10);
 }
 
 .no-image {
@@ -82,6 +82,12 @@
 .page-button:hover {
     background-color: #cc6633;
 }
+
+.addButton {
+    background-color:red;
+    margin-top:20px;
+    color:white;
+  }
 
 @media (max-width: 768px) {
     .genre-view-item {
