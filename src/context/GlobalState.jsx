@@ -16,7 +16,7 @@ export const StoreProvider = ({ children }) => {
     //const [email, setEmail] = useState("");
     //const [password, setPass] = useState("");
     //cart
-    const [cartItems, setCartItems] = useState([]);
+    const [cartItems, setCartItems] = useState(Map());
     //genres
     const [genres, setGenres] = useState([]);
     const [selectedGenres, setSelected] = useState([]);

@@ -1,13 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useStoreContext } from "../context/GlobalState";
+import { firestore } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 import "./CartView.css";
 
 function CartView() {
     const { cartItems, setCartItems, firstName, user } = useStoreContext();
-
-    //function remove(movie) {
-    //    setCartItems(cartItems.filter(item => item !== movie)); // Correct the cartItems state update
-    //}
 
     const removeFromCart = (movie) => {
         const updatedCart = cartItems.filter(item => item.id !== movie.id);
@@ -15,6 +13,23 @@ function CartView() {
         localStorage.setItem(user.uid, JSON.stringify(updatedCart));
     }
 
+    const checkout = async () => {
+        try {
+            const docRef = doc(firestore, "users", user.uid);
+    
+            // Save cartItems directly since it's a plain array
+            await setDoc(docRef, { cart: cartItems });
+    
+            // Clear local storage and state
+            localStorage.clear();
+            setCartItems([]);
+            console.log("Checkout successful and cart saved to Firestore.");
+        } catch (error) {
+            console.error("Error during checkout:", error);
+        }
+    };
+    
+    console.log(cartItems, typeof cartItems, Array.isArray(cartItems));
     console.log(cartItems);
 
     return (
@@ -37,8 +52,11 @@ function CartView() {
                             </button>
                         </div>
                     ))}
-                    <button> 
-                        Purchase
+                    <button
+                        className="checkoutButton"
+                        onClick={() => checkout()}
+                    > 
+                        Checkout
                     </button>
                 </div>
             )}
