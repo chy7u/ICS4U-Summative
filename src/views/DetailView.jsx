@@ -5,11 +5,12 @@ import { useStoreContext } from "../context/GlobalState";
 import "./DetailView.css";
 
 function DetailView() {
-  const { cartItems, setCartItems } = useStoreContext();
+  const { cartItems, setCartItems, user } = useStoreContext();
   const [ added, setAdded ] = useState(false);
   const { id } = useParams();
   const [movie, setMovie] = useState();
   const [trailers, setTrailers] = useState([]);
+  const params = useParams();
 
   useEffect(() => {
     async function fetchMovieDetails() {
@@ -33,15 +34,28 @@ function DetailView() {
     }
   }, [cartItems, movie, id]);
 
-  function addToCart() {
+  //function addToCart() {
+  //  if (!added) {
+  //    const updatedCart = [...cartItems, { 
+  //      title: movie.title, poster: movie.poster_path
+  //    }];
+  //    setCartItems(updatedCart);
+  //    setAdded(true);
+  //  }
+  //}
+
+  const addToCart = () => {
     if (!added) {
       const updatedCart = [...cartItems, { 
-        title: movie.title, poster: movie.poster_path
+        id: movie.id,
+        title: movie.title,
+        poster: movie.poster_path,
       }];
       setCartItems(updatedCart);
+      localStorage.setItem(user.uid, JSON.stringify(updatedCart));
       setAdded(true);
     }
-  }
+  };  
 
   console.log(cartItems);
 
