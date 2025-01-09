@@ -3,10 +3,16 @@ import { useStoreContext } from "../context/GlobalState";
 import "./CartView.css";
 
 function CartView() {
-    const { cartItems, setCartItems, firstName } = useStoreContext();
+    const { cartItems, setCartItems, firstName, user } = useStoreContext();
 
-    function remove(movie) {
-        setCartItems(cartItems.filter(item => item !== movie)); // Correct the cartItems state update
+    //function remove(movie) {
+    //    setCartItems(cartItems.filter(item => item !== movie)); // Correct the cartItems state update
+    //}
+
+    const removeFromCart = (movie) => {
+        const updatedCart = cartItems.filter(item => item.id !== movie.id);
+        setCartItems(updatedCart);
+        localStorage.setItem(user.uid, JSON.stringify(updatedCart));
     }
 
     console.log(cartItems);
@@ -26,7 +32,7 @@ function CartView() {
                                 alt={movie.title}
                                 className="cart-view-image"
                             />
-                            <button className="trash" onClick={() => { remove(movie) }}>
+                            <button className="trash" onClick={() => { removeFromCart(movie) }}>
                                 Delete item
                             </button>
                         </div>

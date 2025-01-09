@@ -21,7 +21,7 @@
     width: 200px;
     text-align: center;
     margin-bottom: 20px;
-    transition: transform 0.8s ease;
+    transition: transform 0.4s ease;
 }
 
 .genre-view-item a {
@@ -34,7 +34,7 @@
     height: auto;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.8s ease;
+    transition: transform 0.4s ease;
 }
 
 .genre-view-item:hover .genre-view-image {
