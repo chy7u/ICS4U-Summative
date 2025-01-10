@@ -61,7 +61,9 @@ function GenreView() {
       localStorage.setItem(user.uid, JSON.stringify(updatedCart));
     }
   };  
-  console.log(JSON.stringify(user));
+  console.log(user);
+  console.log(user.emailVerified);
+
   return (
     <div className="hero">
       <h2>Welcome, {firstName}</h2>

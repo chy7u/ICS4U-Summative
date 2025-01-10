@@ -7,8 +7,8 @@ function SettingsView() {
   const {
     firstName, setFirst,
     lastName, setLast,
-    email, setCurrentGenre,
-    setSelected
+    setCurrentGenre,
+    setSelected, user
   } = useStoreContext();
 
   const navigate = useNavigate();
@@ -17,6 +17,9 @@ function SettingsView() {
   const [changedLast, setChangeLast] = useState(false);
   const newFirst = useRef();
   const newLast = useRef();
+  const [email, setEmail] = useState("");
+  const [changedFirstName, setChangedFirst] = useState("");
+  const [changedLastName, setChangedLast] = useState("");
 
   const genres = [
     { genre: "Action", id: 28 },
@@ -66,7 +69,16 @@ function SettingsView() {
       navigate(`/movies`);
     }
   }
-
+  //split the display name into first and last (const are firstName and lastName)
+  if (user && user.displayName) {
+    const [firstName, ...lastNameParts] = user.displayName.split(" ");
+    const lastName = lastNameParts.join(" ");
+    console.log("First Name:", firstName);
+    console.log("Last Name:", lastName);
+  } else {
+    console.log("Display name not available.");
+  }
+  
   function setInfo() {
     if (newFirst !== null) {
       setChangeFirst(newFirst.current.value);
@@ -82,52 +94,76 @@ function SettingsView() {
     <>
       <div className="settings-container">
         <h2>Settings</h2>
-        <form onSubmit={settings}>
-          <label className="user-email">Email: {email}</label>
-
-          <div className="user-info-div">
-            <label className="user-info">First Name: {firstName}</label>
-            <button className="change-button" type="button" onClick={firstNameChange}>Change</button>
+        {user.emailVerified ? (
+          <form onSubmit={settings}>
+            <label className="user-email">Email: {user.email}</label>
+              <label className="genre-label">Genres:</label>
+              <div className="genres-list">
+                {genres.map((item) => {
+                  return (
+                    <label key={item.id}>
+                      <input
+                        type="checkbox"
+                        id="check"
+                        ref={(el) => (checkboxesRef.current[item.id] = el)}
+                      /> {item.genre}
+                    </label>
+                  );
+                })}
+              </div>
+          </form>
+        ) : (
+          <div>
+            <h2>lols</h2>
           </div>
-          {changedFirst && (
-            <input 
-              type="text"
-              placeholder="New First Name"
-              ref={newFirst}
-            />
-          )}
-
-          <div className="user-info-div">
-            <label className="user-info">Last Name: {lastName}</label>
-            <button className="change-button" type="button" onClick={lastNameChange}>Change</button>
-          </div>
-          {changedLast && (
-            <input 
-              type="text"
-              placeholder="New Last Name"
-              ref={newLast}
-            />
-          )}
-
-          <label className="genre-label">Genres:</label>
-          <div className="genres-list">
-            {genres.map((item) => {
-              return (
-                <label key={item.id}>
-                  <input
-                    type="checkbox"
-                    id="check"
-                    ref={(el) => (checkboxesRef.current[item.id] = el)}
-                  /> {item.genre}
-                </label>
-              );
-            })}
-          </div>
-          <button className="submit" type="submit" onChange={settings}>Submit Changes</button>
-        </form>
+        )}
       </div>
     </>
   )
 }
 
 export default SettingsView;
+
+//<form onSubmit={settings}>
+//  <label className="user-email">Email: {email}</label>
+//  
+//  <div className="user-info-div">
+//    <label className="user-info">First Name: {firstName}</label>
+//    <button className="change-button" type="button" onClick={firstNameChange}>Change</button>
+//  </div>
+//  {changedFirst && (
+//    <input 
+//      type="text"
+//      placeholder="New First Name"
+//      ref={newFirst}
+//    />
+//  )}
+//  
+//  <div className="user-info-div">
+//    <label className="user-info">Last Name: {lastName}</label>
+//    <button className="change-button" type="button" onClick={lastNameChange}>Change</button>
+//  </div>
+//  {changedLast && (
+//    <input 
+//      type="text"
+//      placeholder="New Last Name"
+//      ref={newLast}
+//    />
+//  )}
+//  
+//  <label className="genre-label">Genres:</label>
+//  <div className="genres-list">
+//    {genres.map((item) => {
+//      return (
+//        <label key={item.id}>
+//          <input
+//            type="checkbox"
+//            id="check"
+//            ref={(el) => (checkboxesRef.current[item.id] = el)}
+//          /> {item.genre}
+//        </label>
+//      );
+//    })}
+//  </div>
+//  <button className="submit" type="submit" onChange={settings}>Submit Changes</button>
+//</form>
