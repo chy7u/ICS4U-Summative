@@ -8,7 +8,7 @@ function SettingsView() {
     firstName, setFirst,
     lastName, setLast,
     email, setCurrentGenre,
-    setSelected
+    setSelected, user
   } = useStoreContext();
 
   const navigate = useNavigate();
@@ -77,6 +77,8 @@ function SettingsView() {
       setLast(newLast.current.value);
     }
   }
+
+  
   
   return (
     <>

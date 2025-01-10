@@ -34,7 +34,7 @@ function CartView() {
 
     return (
         <div className="cart-view">
-            <h2>{firstName}'s Cart</h2>
+            <h2>{user.displayName}'s Cart</h2>
             {cartItems.length === 0 ? (
                 <p className="empty-cart-message">Your cart is empty. Add some movies!</p>
             ) : (
