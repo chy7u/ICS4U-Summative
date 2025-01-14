@@ -62,6 +62,8 @@ function GenreView() {
     }
   };  
   console.log(user);
+  console.log(user.emailVerified);
+
   return (
     <div className="hero">
       <h2>Welcome, {firstName}</h2>

@@ -4,11 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useStoreContext } from "../context/GlobalState";
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../firebase";
+import { firestore } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 import "./RegisterView.css";
 
 function RegisterView() {
   const {
     setSelected,
+    selectedGenres,
     setCurrentGenre,
     setUser
   } = useStoreContext();
@@ -68,6 +71,10 @@ function RegisterView() {
       const user = (await createUserWithEmailAndPassword(auth, email, password)).user;
       await updateProfile(user, { displayName: `${firstName} ${lastName}` });
       setUser(user);
+      //doc to firestore for genres
+      const docRef = doc(firestore, "users", user.uid);
+      //save genres directly
+      await setDoc(docRef, { genres: selectedGenres });
       navigate('/movies');
     } catch (error) {
       console.log(error);

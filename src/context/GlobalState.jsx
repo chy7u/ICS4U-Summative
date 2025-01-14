@@ -33,6 +33,7 @@ export const StoreProvider = ({ children }) => {
                 const sessionCart = localStorage.getItem(user.uid);
                 if (sessionCart) {
                     setCart(Map(JSON.parse(sessionCart)));
+                    
                 }
             }
         });
