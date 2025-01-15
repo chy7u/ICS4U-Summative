@@ -121,6 +121,12 @@ function SettingsView() {
               
               <div className="user-info-div">
                 <label className="user-info">First Name: {firstName}</label>
+                <button className="change-button" type="button">Change first name</button>
+              </div>
+
+              <div className="user-info-div">
+                <label className="user-info">Last Name: {lastName}</label>
+                <button className="change-button" type="button" >Change last name</button>  
               </div>
             </form>
           </div>
