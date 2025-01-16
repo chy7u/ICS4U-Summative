@@ -7,7 +7,8 @@ import "./GenreView.css";
 function GenreView() {
   const { 
     selectedGenres, firstName,
-    cartItems, setCartItems, user
+    cartItems, setCartItems, 
+    purchased, setPurchased, user
   } = useStoreContext();
 
   const { id } = useParams();
@@ -61,6 +62,15 @@ function GenreView() {
       localStorage.setItem(user.uid, JSON.stringify(updatedCart));
     }
   };  
+
+  //const markAsPurchased = (movie) => {
+  //  if (!purchased.includes(movie.id)) {
+  //    const updatedPurchased = [...purchased, movie.id];
+  //    setPurchased(updatedPurchased);
+  //    localStorage.setItem(`${user.uid}-purchased`, JSON.stringify(updatedPurchased));
+  //  }
+  //}
+
   console.log(user);
   console.log(user.emailVerified);
 
@@ -86,10 +96,13 @@ function GenreView() {
 
               <button
                 className="addButton"
-                onClick={() => addToCart(movie)} // Pass the specific movie
-                disabled={cartItems.some(item => item.id === movie.id)}
+                onClick={() => {
+                  addToCart(movie);
+                  //markAsPurchased(movie);
+                }} // Pass the specific movie
+                disabled={cartItems.some(item => item.id === movie.id) || purchased.includes(movie.id)}
               >
-                {cartItems.some(item => item.id === movie.id) ? "Added" : "Add To Cart"}
+                {cartItems.some(item => item.id === movie.id) ? "Added" : "Add To Cart"};
               </button>
             </div>
           ))
@@ -114,3 +127,5 @@ function GenreView() {
 }
 
 export default GenreView;
+
+//{cartItems.some(item => item.id === movie.id) ? "Added" : "Add To Cart"}

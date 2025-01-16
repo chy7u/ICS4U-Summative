@@ -5,7 +5,10 @@ import { doc, setDoc } from "firebase/firestore";
 import "./CartView.css";
 
 function CartView() {
-    const { cartItems, setCartItems, firstName, user } = useStoreContext();
+    const { cartItems, setCartItems, 
+        firstName, user,
+        purchased, setPurchased 
+    } = useStoreContext();
 
     const removeFromCart = (movie) => {
         const updatedCart = cartItems.filter(item => item.id !== movie.id);
@@ -19,10 +22,24 @@ function CartView() {
     
             // Save cartItems directly since it's a plain array
             await setDoc(docRef, { cart: cartItems });
+
+            const updatedPurchased = [
+                ...purchased, 
+                ...cartItems.map((movie) => movie.id),
+            ];
+            setPurchased(updatedPurchased);
+
+            localStorage.getItem(
+                `${user.uid}-purchased`,
+                JSON.stringify(updatedPurchased)
+            );
+
+            localStorage.removeItem(user.uid);
+            setCartItems([]);
     
             // Clear local storage and state
-            localStorage.clear();
-            setCartItems([]);
+            //localStorage.clear();
+            //setCartItems([]);
             console.log("Checkout successful and cart saved to Firestore.");
         } catch (error) {
             console.error("Error during checkout:", error);
@@ -38,6 +55,7 @@ function CartView() {
             {cartItems.length === 0 ? (
                 <p className="empty-cart-message">Your cart is empty. Add some movies!</p>
             ) : (
+                <>
                 <div className="cart-item-container">
                     {cartItems.map((movie) => (
                         <div key={movie.id} className="cart-view-item">
@@ -52,13 +70,33 @@ function CartView() {
                             </button>
                         </div>
                     ))}
+                </div>
+                <div className="checkout-container">
                     <button
                         className="checkoutButton"
-                        onClick={() => checkout()}
+                        onClick={() => {
+                            checkout();
+                            }}
                     > 
                         Checkout
                     </button>
                 </div>
+                {purchased.length > 0 && (
+                    <div className="purchased-movies">
+                        <h3>Purchased Movies:</h3>
+                        <ul>
+                            {purchased.map((id) => {
+                                const purchasedMovie = cartItems.find((movie) => movie.id === id);
+                                return (
+                                    <li key={id}>
+                                        {purchasedMovie ? purchasedMovie.title : `Movie ID: ${id}`}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                )}
+                </>
             )}
         </div>
     )

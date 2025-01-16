@@ -17,6 +17,7 @@ export const StoreProvider = ({ children }) => {
     //const [password, setPass] = useState("");
     //cart
     const [cartItems, setCartItems] = useState(Map());
+    const [purchased, setPurchased] = useState(Map());
     //genres
     const [genres, setGenres] = useState([]);
     const [selectedGenres, setSelected] = useState([]);
@@ -33,8 +34,10 @@ export const StoreProvider = ({ children }) => {
                 const sessionCart = localStorage.getItem(user.uid);
                 if (sessionCart) {
                     setCart(Map(JSON.parse(sessionCart)));
-                    
                 }
+
+                const storedPurchasedItems = JSON.parse(localStorage.getItem(`${user?.uid}-purchased`)) || [];
+                setPurchased(storedPurchasedItems);
             }
         });
     }, [])
@@ -49,6 +52,7 @@ export const StoreProvider = ({ children }) => {
             selectedGenres, setSelected,
             selectedGenreNames, setSelectedNames,
             currentGenre, setCurrentGenre,
+            purchased, setPurchased
             //loggedIn, //setLoggedIn
             //sets these states as values inside the context
         }}>

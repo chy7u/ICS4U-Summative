@@ -80,8 +80,14 @@
     margin-top: 2rem;
 }
 
+.checkout-container {
+    display:flex;
+    justify-content:center;
+    margin-top:2rem;
+}
+
 .checkoutButton {
-    width: 100%;
+    width: auto;
     padding: 12px;
     background-color: #007bff;
     border: none;
@@ -90,8 +96,6 @@
     font-size: 1.2rem;
     cursor: pointer;
     margin-top: 40px;
-    margin-left:100%;
-    justify-self:center;
 }
 
 /* Responsive Design */
@@ -104,4 +108,29 @@
     .cart-item-container {
         grid-template-columns: 1fr;
     }
+}
+
+/* purchased */ 
+.purchased-movies {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.purchased-movies h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.purchased-movies ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.purchased-movies li {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 0.5rem;
 }
