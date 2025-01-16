@@ -38,9 +38,12 @@ export const StoreProvider = ({ children }) => {
 
                 const storedPurchasedItems = JSON.parse(localStorage.getItem(`${user?.uid}-purchased`)) || [];
                 setPurchased(storedPurchasedItems);
+
+                const storedGenres = JSON.parse(localStorage.getItem(`${user?.uid}-genres`)) || [];
+                setSelected(storedGenres);
             }
         });
-    }, [])
+    }, [user])
 
     return (
         //value is initial values

@@ -75,6 +75,9 @@ function RegisterView() {
       const docRef = doc(firestore, "users", user.uid);
       //save genres directly
       await setDoc(docRef, { genres: selectedGenres });
+
+      localStorage.setItem(`${user.uid}-genres`, JSON.stringify(selectedGenres));
+
       navigate('/movies');
     } catch (error) {
       console.log(error);

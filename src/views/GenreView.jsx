@@ -102,7 +102,7 @@ function GenreView() {
                 }} // Pass the specific movie
                 disabled={cartItems.some(item => item.id === movie.id) || purchased.includes(movie.id)}
               >
-                {cartItems.some(item => item.id === movie.id) ? "Added" : "Add To Cart"};
+                {purchased.includes(movie.id) ? "Purchased" : cartItems.some(item => item.id === movie.id) ? "Added" : "Add To Cart"}
               </button>
             </div>
           ))
