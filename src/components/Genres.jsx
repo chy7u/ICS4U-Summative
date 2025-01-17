@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
+import { useEffect, useState } from "react";
 import { useStoreContext } from "../context/GlobalState";
 import "./Genres.css";
 
 function Genres() {
-  const { selectedGenres, selectedGenreNames, setCurrentGenre } = useStoreContext();
+  const { selectedGenres, selectedGenreNames, setCurrentGenre, user, setSelected } = useStoreContext();
+
   console.log(selectedGenres);
   console.log(selectedGenreNames);
   return (

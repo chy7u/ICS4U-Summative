@@ -8,7 +8,7 @@ function GenreView() {
   const { 
     selectedGenres, firstName,
     cartItems, setCartItems, 
-    purchased, setPurchased, user
+    purchased, setPurchased, user, setSelected
   } = useStoreContext();
 
   const { id } = useParams();
@@ -16,14 +16,21 @@ function GenreView() {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [previousId, setPreviousId] = useState(selectedGenres[0].id);
+  const [previousId, setPreviousId] = useState(null);
   
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (!id) {
+      console.warn("No genre ID");
+      return;
+    }
+
     if (id !== previousId) {
       setPage(1);
       setPreviousId(id);
     }
+
+    window.scrollTo(0, 0);
+
     async function fetchMovies() {
       try {
         const response = await axios.get(
@@ -61,7 +68,14 @@ function GenreView() {
       setCartItems(updatedCart);
       localStorage.setItem(user.uid, JSON.stringify(updatedCart));
     }
-  };  
+  };
+
+  useEffect(() => {
+    if (selectedGenres.length === 0 && user) {
+      const storedGenres = JSON.parse(localStorage.getItem(`${user?.uid}-genres`))  || [];
+      setSelected(storedGenres);
+    }
+  }, [selectedGenres, user, setSelected])
 
   //const markAsPurchased = (movie) => {
   //  if (!purchased.includes(movie.id)) {
@@ -71,8 +85,8 @@ function GenreView() {
   //  }
   //}
 
-  console.log(user);
-  console.log(user.emailVerified);
+  //console.log(user);
+  //console.log(user.emailVerified);
 
   return (
     <div className="hero">
