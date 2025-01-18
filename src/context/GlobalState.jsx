@@ -11,8 +11,8 @@ export const StoreProvider = ({ children }) => {
     //states to keep track of where user is
     //const [loggedIn, setLoggedIn] = useState(false);
     //user info
-    //const [firstName, setFirst] = useState("");
-    //const [lastName, setLast] = useState("");
+    const [firstName, setFirst] = useState("");
+    const [lastName, setLast] = useState("");
     //const [email, setEmail] = useState("");
     //const [password, setPass] = useState("");
     //cart
@@ -55,7 +55,9 @@ export const StoreProvider = ({ children }) => {
             selectedGenres, setSelected,
             selectedGenreNames, setSelectedNames,
             currentGenre, setCurrentGenre,
-            purchased, setPurchased
+            purchased, setPurchased, 
+            firstName, setFirst,
+            lastName, setLast
             //loggedIn, //setLoggedIn
             //sets these states as values inside the context
         }}>

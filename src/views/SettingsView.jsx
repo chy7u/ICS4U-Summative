@@ -1,6 +1,9 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStoreContext } from "../context/GlobalState";
+import { updateProfile } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { firestore } from "../firebase";
 import "./SettingsView.css";
 
 function SettingsView() {
@@ -39,7 +42,34 @@ function SettingsView() {
     { genre: "Western", id: 37}
   ];
 
-  const checkboxesRef = useRef({});
+  const checkBoxesRef = useRef({});
+
+  useEffect(() => {
+    if (user && user.displayName) {
+      const [firstName, ...lastNameParts] = user.displayName.split(" ");
+      const lastName = lastNameParts.join(" ");
+      setFirst(firstName);
+      setLast(lastName);
+    }
+
+    const loadGenres = async () => {
+      const docRef = doc(firestore, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        if (userData.genres) {
+          setSelected(userData.genres);
+          userData.genres.forEach((genre) => {
+            if (checkBoxesRef.current[genre.id]) {
+              checkBoxesRef.current[genre.id].checked = true;
+            }
+          });
+        }
+      }
+    };
+
+    loadGenres();
+  }, [user]);
 
   const firstNameChange = () => {
     setChangeFirst(!changedFirst);
@@ -49,87 +79,93 @@ function SettingsView() {
     setChangeLast(!changedLast);
   }
 
-  function settings(e) {
+  const settingsChange = async (e) => {
     e.preventDefault();
-    const selectedGenresIds = Object.keys(checkboxesRef.current)
-      .filter((genreId) => checkboxesRef.current[genreId].checked)
+
+    const selectedGenresIds = Object.keys(checkBoxesRef.current)
+      .filter((genreId) => checkBoxesRef.current[genreId].checked)
       .map(Number);
-    
+
     if (selectedGenresIds.length < 10) {
-      alert("You need to select at least 10 genres!");
-    } else if (selectedGenresIds.length >= 3) {
+      alert("You need at least 10 genres!");
+      return;
+    }
 
-      const selectedGenres = genres.filter((genre) =>
-        selectedGenresIds.includes(genre.id)
-      );
+    const selectedGenres = genres.filter((genre) =>
+      selectedGenresIds.includes(genre.id)
+    );
 
+    setSelected(selectedGenres);
+    setCurrentGenre(selectedGenresIds[0].genre);
+
+    try {
+      if (changedFirst || changedLast) {
+        await updateProfile(user, { displayName: `${firstName} ${lastName}` });
+      }
+
+      const docRef = doc(firestore, "users", user.uid);
+      await setDoc(docRef, { genres: selectedGenres }, { merge: true });
+
+      localStorage.setItem(`${user.uid}-genres`, JSON.stringify(selectedGenres));
       setSelected(selectedGenres);
-      setCurrentGenre(selectedGenres[0].genre);
-      setInfo();
+
       navigate(`/movies`);
-    }
-  }
-  //split the display name into first and last (const are firstName and lastName)
-  if (user && user.displayName) {
-    const [firstName, ...lastNameParts] = user.displayName.split(" ");
-    const lastName = lastNameParts.join(" ");
-    console.log("First Name:", firstName);
-    console.log("Last Name:", lastName);
-  } else {
-    console.log("Display name not available.");
-  }
-  
-  function setInfo() {
-    if (newFirst !== null) {
-      setChangeFirst(newFirst.current.value);
-      setFirst(newFirst.current.value);
-    }
-    if (newLast !== null) {
-      setChangeLast(newLast.current.value);
-      setLast(newLast.current.value);
+    } catch (error) {
+      console.log(error);
     }
   }
 
-  
-  
   return (
     <>
       <div className="settings-container">
         <h2>Settings</h2>
         {user.emailVerified ? (
-          <form onSubmit={settings}>
-            <label className="user-email">Email: {user.email}</label>
-              <label className="genre-label">Genres:</label>
-              <div className="genres-list">
-                {genres.map((item) => {
-                  return (
-                    <label key={item.id}>
-                      <input
-                        type="checkbox"
-                        id="check"
-                        ref={(el) => (checkboxesRef.current[item.id] = el)}
-                      /> {item.genre}
-                    </label>
-                  );
-                })}
-              </div>
-          </form>
-        ) : (
           <div>
-            <form onSubmit={settings}>
-              <label className="user-email">Email: {user.email}</label>
-              
-              <div className="user-info-div">
-                <label className="user-info">First Name: {firstName}</label>
-                <button className="change-button" type="button">Change first name</button>
-              </div>
-
-              <div className="user-info-div">
-                <label className="user-info">Last Name: {lastName}</label>
-                <button className="change-button" type="button" >Change last name</button>  
-              </div>
-            </form>
+            <p>Please verify your email to access settings.</p>
           </div>
+        ) : (
+          <form onSubmit={settingsChange}>
+          <label className="user-email">Email: {user.email}</label>
+          <div className="user-info-div">
+            <label className="user-info">First Name: {firstName}</label>
+            <button className="change-button" type="button" onClick={firstNameChange}>Change first name</button>
+          </div>
+          {changedFirst && (
+            <input 
+              type="text"
+              placeholder="New First Name"
+              ref={newFirst}
+              onChange={(e) => setFirst(e.target.value)}
+            />
+          )}
+          <div className="user-info-div">
+            <label className="user-info">Last Name: {lastName}</label>
+            <button className="change-button" type="button" onClick={lastNameChange}>Change last name</button>  
+          </div>
+          {changedLast && (
+            <input 
+              type="text"
+              placeholder="New Last Name"
+              ref={newLast}
+              onChange={(e) => setLast(e.target.value)}
+            />
+          )}
+          <label className="genre-label">Genres:</label>
+          <div className="genres-list">
+            {genres.map((item) => {
+              return (
+                <label key={item.id}>
+                  <input
+                    type="checkbox"
+                    id="check"
+                    ref={(el) => (checkBoxesRef.current[item.id] = el)}
+                  /> {item.genre}
+                </label>
+              );
+            })}
+          </div>
+          <button className="submit" type="submit">Submit Changes</button>
+        </form>
         )}
       </div>
     </>
