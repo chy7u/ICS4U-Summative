@@ -21,7 +21,7 @@ function CartView() {
             const docRef = doc(firestore, "users", user.uid);
     
             // Save cartItems directly since it's a plain array
-            await setDoc(docRef, { cart: cartItems });
+            await setDoc(docRef, { cart: cartItems }, { merge: true });
 
             const updatedPurchased = [
                 ...purchased, 
@@ -29,7 +29,7 @@ function CartView() {
             ];
             setPurchased(updatedPurchased);
 
-            localStorage.getItem(
+            localStorage.setItem(
                 `${user.uid}-purchased`,
                 JSON.stringify(updatedPurchased)
             );

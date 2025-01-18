@@ -75,7 +75,7 @@ function GenreView() {
       const storedGenres = JSON.parse(localStorage.getItem(`${user?.uid}-genres`))  || [];
       setSelected(storedGenres);
     }
-  }, [selectedGenres, user, setSelected])
+  }, [selectedGenres, setSelected])
 
   //const markAsPurchased = (movie) => {
   //  if (!purchased.includes(movie.id)) {
