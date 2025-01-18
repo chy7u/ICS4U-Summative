@@ -2,6 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useStoreContext } from "../context/GlobalState";
+import { auth } from "../firebase";
+import { firestore } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 import "./GenreView.css";
 
 function GenreView() {
@@ -58,15 +61,24 @@ function GenreView() {
   }
 
   // Modify to track added state per movie
-  const addToCart = (movie) => {
+  const addToCart = async (movie) => {
     if (!cartItems.some(item => item.id === movie.id)) {
       const updatedCart = [...cartItems, { 
         id: movie.id,
         title: movie.title,
         poster: movie.poster_path,
       }];
-      setCartItems(updatedCart);
-      localStorage.setItem(user.uid, JSON.stringify(updatedCart));
+
+      try {
+        const docRef = doc(firestore, "users", user.uid);
+        await setDoc(docRef, { cart: updatedCart }, {merge: true});
+
+        localStorage.setItem(`${user.uid}-cart`, JSON.stringify(updatedCart));
+        setCartItems(updatedCart);
+
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+      }
     }
   };
 
@@ -76,6 +88,15 @@ function GenreView() {
       setSelected(storedGenres);
     }
   }, [selectedGenres, setSelected])
+
+  useEffect(() => {
+    if (user) {
+      const storedCartItems = JSON.parse(localStorage.getItem(`${user.uid}-cart`)) || [];
+      setCartItems(storedCartItems);
+    }
+  }, [user]);  // Only run this effect when the user changes (on login or reload)  
+
+  console.log(cartItems);
 
   //const markAsPurchased = (movie) => {
   //  if (!purchased.includes(movie.id)) {
