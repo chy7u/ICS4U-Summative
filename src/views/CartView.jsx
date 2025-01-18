@@ -21,13 +21,14 @@ function CartView() {
             const docRef = doc(firestore, "users", user.uid);
     
             // Save cartItems directly since it's a plain array
-            await setDoc(docRef, { cart: cartItems }, { merge: true });
 
             const updatedPurchased = [
                 ...purchased, 
-                ...cartItems.map((movie) => movie.id),
+                ...cartItems.map((movie) => movie.title),
             ];
             setPurchased(updatedPurchased);
+
+            await setDoc(docRef, { purchased: updatedPurchased }, { merge: true });
 
             localStorage.setItem(
                 `${user.uid}-purchased`,
@@ -81,22 +82,22 @@ function CartView() {
                         Checkout
                     </button>
                 </div>
-                {purchased.length > 0 && (
-                    <div className="purchased-movies">
-                        <h3>Purchased Movies:</h3>
-                        <ul>
-                            {purchased.map((id) => {
-                                const purchasedMovie = cartItems.find((movie) => movie.id === id);
-                                return (
-                                    <li key={id}>
-                                        {purchasedMovie ? purchasedMovie.title : `Movie ID: ${id}`}
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>
-                )}
                 </>
+            )}
+            {purchased.length > 0 && (
+                <div className="purchased-movies">
+                    <h3>Purchased Movies:</h3>
+                    <ul>
+                        {purchased.map((id) => {
+                            const purchasedMovie = cartItems.find((movie) => movie.id === id);
+                            return (
+                                <li key={id}>
+                                    {purchasedMovie ? purchasedMovie.title : `Movie Title: ${id}`}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
             )}
         </div>
     )

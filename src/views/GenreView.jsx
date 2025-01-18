@@ -114,9 +114,9 @@ function GenreView() {
                   addToCart(movie);
                   //markAsPurchased(movie);
                 }} // Pass the specific movie
-                disabled={cartItems.some(item => item.id === movie.id) || purchased.includes(movie.id)}
+                disabled={cartItems.some(item => item.id === movie.id) || purchased.includes(movie.title)}
               >
-                {purchased.includes(movie.id) ? "Purchased" : cartItems.some(item => item.id === movie.id) ? "Added" : "Add To Cart"}
+                {purchased.includes(movie.title) ? "Purchased" : cartItems.some(item => item.id === movie.id) ? "Added" : "Add To Cart"}
               </button>
             </div>
           ))
