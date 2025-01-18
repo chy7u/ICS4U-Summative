@@ -26,6 +26,7 @@ export const StoreProvider = ({ children }) => {
     //user for firebase
     const [user, setUser] = useState(null);
     const [cart, setCart] = useState(Map());
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         onAuthStateChanged(auth, user => {
@@ -42,8 +43,13 @@ export const StoreProvider = ({ children }) => {
                 const storedGenres = JSON.parse(localStorage.getItem(`${user?.uid}-genres`)) || [];
                 setSelected(storedGenres);
             }
+            setLoading(false);
         });
     }, [user, setSelected])
+
+    if (loading) {
+        return <h1>Loading...</h1>
+    }
 
     return (
         //value is initial values
@@ -57,7 +63,8 @@ export const StoreProvider = ({ children }) => {
             currentGenre, setCurrentGenre,
             purchased, setPurchased, 
             firstName, setFirst,
-            lastName, setLast
+            lastName, setLast,
+            loading, setLoading
             //loggedIn, //setLoggedIn
             //sets these states as values inside the context
         }}>

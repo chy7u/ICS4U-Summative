@@ -27,7 +27,7 @@ function CartView() {
 
             const updatedPurchased = [
                 ...purchased, 
-                ...cartItems.map((movie) => movie.title),
+                ...cartItems.map((movie) =>  movie.title),
             ];
             setPurchased(updatedPurchased);
 

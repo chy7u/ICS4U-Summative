@@ -7,7 +7,7 @@ import { auth } from '../firebase';
 import './LoginView.css';
 
 function LoginView() {
-    const { setUser } = useStoreContext();
+    const { setUser, user } = useStoreContext();
     //const enteredPassword = useRef("");
     const enteredEmail = useRef("");
     const [password, setPassword] = useState('');
@@ -52,6 +52,7 @@ function LoginView() {
 //    }
 //
 //    console.log(loggedIn);
+  console.log(user);
 
     return (
         <div className="login-container">
