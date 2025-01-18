@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStoreContext } from "../context/GlobalState";
 import { firestore } from "../firebase";
@@ -14,6 +15,20 @@ function CartView() {
         const updatedCart = cartItems.filter(item => item.id !== movie.id);
         setCartItems(updatedCart);
         localStorage.setItem(user.uid, JSON.stringify(updatedCart));
+    }
+
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      if (user) {
+        const storedCartItems = JSON.parse(localStorage.getItem(`${user.uid}-cart`)) || [];
+        setCartItems(storedCartItems);
+        setLoading(false);
+      }
+    }, [user]);  // Only run this effect when the user changes (on login or reload)  
+
+    if (loading) {
+        return <div>Loading...</div>;
     }
 
     const checkout = async () => {
@@ -52,7 +67,7 @@ function CartView() {
 
     return (
         <div className="cart-view">
-            <h2>{user.displayName}'s Cart</h2>
+            <h2>{user ? `${user.displayName}'s Cart`: `Cart`}</h2>
             {cartItems.length === 0 ? (
                 <p className="empty-cart-message">Your cart is empty. Add some movies!</p>
             ) : (
