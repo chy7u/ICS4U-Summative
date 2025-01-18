@@ -9,6 +9,8 @@ import GenreView from "./views/GenreView";
 import DetailView from "./views/DetailView";
 import CartView from "./views/CartView";
 import SettingsView from "./views/SettingsView";
+import ProtectedRoutes from "./util/ProtectedRoutes.jsx";
+
 import './App.css';
 
 function App() {
@@ -23,12 +25,14 @@ function App() {
           <Route path="/" element={<HomeView/>}/>
           <Route path="/login" element={<LoginView/>}/>
           <Route path="/register" element={<RegisterView/>}/>
-          <Route path="/movies" element={<MoviesView/>}>
-            <Route path="genre/:id" element={<GenreView/>}/>
-            <Route path="details/:id" element={<DetailView/>}/>
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/movies" element={<MoviesView/>}>
+              <Route path="genre/:id" element={<GenreView/>}/>
+              <Route path="details/:id" element={<DetailView/>}/>
+            </Route>
+            <Route path="cart" element={<CartView/>}/>
+            <Route path="settings" element={<SettingsView/>}/>
           </Route>
-          <Route path="cart" element={<CartView/>}/>
-          <Route path="settings" element={<SettingsView/>}/>
         </Routes>
       </BrowserRouter>
     </StoreProvider>

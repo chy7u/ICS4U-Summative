@@ -14,22 +14,10 @@ function CartView() {
     const removeFromCart = (movie) => {
         const updatedCart = cartItems.filter(item => item.id !== movie.id);
         setCartItems(updatedCart);
-        localStorage.setItem(user.uid, JSON.stringify(updatedCart));
+        localStorage.setItem(`${user.uid}-cart`, JSON.stringify(updatedCart));
     }
 
     const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-      if (user) {
-        const storedCartItems = JSON.parse(localStorage.getItem(`${user.uid}-cart`)) || [];
-        setCartItems(storedCartItems);
-        setLoading(false);
-      }
-    }, [user]);  // Only run this effect when the user changes (on login or reload)  
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
 
     const checkout = async () => {
         try {
@@ -61,7 +49,19 @@ function CartView() {
             console.error("Error during checkout:", error);
         }
     };
+
+    useEffect(() => {
+        if (user) {
+          const storedCartItems = JSON.parse(localStorage.getItem(`${user.uid}-cart`)) || [];
+          setCartItems(storedCartItems);
+          setLoading(false);
+        }
+    }, [user]);  // Only run this effect when the user changes (on login or reload)  
     
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     console.log(cartItems, typeof cartItems, Array.isArray(cartItems));
     console.log(cartItems);
 
