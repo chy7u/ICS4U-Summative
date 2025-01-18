@@ -87,12 +87,12 @@ function CartView() {
             {purchased.length > 0 && (
                 <div className="purchased-movies">
                     <h3>Purchased Movies:</h3>
-                    <ul>
+                    <ul className="purchased-movies-list">
                         {purchased.map((id) => {
                             const purchasedMovie = cartItems.find((movie) => movie.id === id);
                             return (
                                 <li key={id}>
-                                    {purchasedMovie ? purchasedMovie.title : `Movie Title: ${id}`}
+                                    {purchasedMovie ? purchasedMovie.title : `Title: ${id}`}
                                 </li>
                             );
                         })}
