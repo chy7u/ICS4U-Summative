@@ -11,11 +11,22 @@ function Header() {
 
     const navigate = useNavigate();
 
-    function logout() {
+    function logoutt() {
         setUser(null);
         signOut(auth);
         navigate(`/`);
     }
+
+    async function logout() {
+        try {
+            await signOut(auth);
+            setUser(null);
+            navigate(`/`);
+        } catch (error) {
+            console.error("Error during logout:", error);
+        }
+    }
+
     return (
         <div className="header">
             <div className="title">Notflix</div>

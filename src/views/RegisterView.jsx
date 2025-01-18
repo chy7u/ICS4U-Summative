@@ -13,7 +13,8 @@ function RegisterView() {
     setSelected,
     selectedGenres,
     setCurrentGenre,
-    setUser
+    setUser,
+    user, userData
   } = useStoreContext();
 
   const [firstName, setFirstName] = useState("");
@@ -77,14 +78,16 @@ function RegisterView() {
       await setDoc(docRef, { genres: selectedGenres });
 
       localStorage.setItem(`${user.uid}-genres`, JSON.stringify(selectedGenres));
-
+      setSelected(selectedGenres);
       navigate('/movies');
     } catch (error) {
       console.log(error);
       alert("Error creating user with email and password!");
     }
   };
-
+  console.log(selectedGenres);
+  console.log("User UID:", user?.uid);
+  console.log("Data to set:", userData);
   const registerByGoogle = async () => {
     const selectedGenresIds = Object.keys(checkBoxesRef.current)
     .filter((genreId) => checkBoxesRef.current[genreId].checked)

@@ -43,7 +43,7 @@ export const StoreProvider = ({ children }) => {
                 setSelected(storedGenres);
             }
         });
-    }, [user])
+    }, [user, setSelected])
 
     return (
         //value is initial values
