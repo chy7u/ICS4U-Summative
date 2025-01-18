@@ -120,9 +120,24 @@ function SettingsView() {
       <div className="settings-container">
         <h2>Settings</h2>
         {user.emailVerified ? (
-          <div>
-            <p>Please verify your email to access settings.</p>
+          <form onSubmit={settingsChange}>
+          <label className="user-email">Email: {user.email}</label>
+          <label className="genre-label">Genres:</label>
+          <div className="genres-list">
+            {genres.map((item) => {
+              return (
+                <label key={item.id}>
+                  <input
+                    type="checkbox"
+                    id="check"
+                    ref={(el) => (checkBoxesRef.current[item.id] = el)}
+                  /> {item.genre}
+                </label>
+              );
+            })}
           </div>
+          <button className="submit" type="submit">Submit Changes</button>
+          </form>          
         ) : (
           <form onSubmit={settingsChange}>
           <label className="user-email">Email: {user.email}</label>

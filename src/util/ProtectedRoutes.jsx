@@ -3,7 +3,6 @@ import { useStoreContext } from "../context/GlobalState";
 
 function ProtectedRoutes() {
   const { user } = useStoreContext();
-  console.log(user);
   return (
     user ? <Outlet /> : <Navigate to="/login" />
   )

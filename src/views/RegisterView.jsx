@@ -85,6 +85,7 @@ function RegisterView() {
       alert("Error creating user with email and password!");
     }
   };
+
   console.log(selectedGenres);
   console.log("User UID:", user?.uid);
   console.log("Data to set:", userData);
@@ -112,6 +113,13 @@ function RegisterView() {
     try {
       const user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
       setUser(user);
+      //doc to firestore for genres
+      const docRef = doc(firestore, "users", user.uid);
+      //save genres directly
+      await setDoc(docRef, { genres: selectedGenres });
+
+      localStorage.setItem(`${user.uid}-genres`, JSON.stringify(selectedGenres));
+      setSelected(selectedGenres);
       navigate('/movies');
     } catch {
       alert("Error creating user with email and password!");

@@ -16,8 +16,17 @@ function CartView() {
         setCartItems(updatedCart);
         localStorage.setItem(`${user.uid}-cart`, JSON.stringify(updatedCart));
     }
+    console.log(cartItems);
 
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (user) {
+          const storedCartItems = JSON.parse(localStorage.getItem(`${user.uid}-cart`)) || [];
+          setCartItems(storedCartItems);
+          setLoading(false);
+        }
+    }, [user]);  // Only run this effect when the user changes (on login or reload)  
 
     const checkout = async () => {
         try {
@@ -38,7 +47,10 @@ function CartView() {
                 JSON.stringify(updatedPurchased)
             );
 
-            localStorage.removeItem(user.uid);
+            localStorage.removeItem(
+                `${user.uid}-cart`
+            );
+            
             setCartItems([]);
     
             // Clear local storage and state
@@ -49,21 +61,10 @@ function CartView() {
             console.error("Error during checkout:", error);
         }
     };
-
-    useEffect(() => {
-        if (user) {
-          const storedCartItems = JSON.parse(localStorage.getItem(`${user.uid}-cart`)) || [];
-          setCartItems(storedCartItems);
-          setLoading(false);
-        }
-    }, [user]);  // Only run this effect when the user changes (on login or reload)  
     
     if (loading) {
         return <div>Loading...</div>;
     }
-
-    console.log(cartItems, typeof cartItems, Array.isArray(cartItems));
-    console.log(cartItems);
 
     return (
         <div className="cart-view">
