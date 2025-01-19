@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useStoreContext } from "../context/GlobalState";
-import { auth } from "../firebase";
 import { firestore } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import "./GenreView.css";
@@ -83,14 +82,23 @@ function GenreView() {
 
   useEffect(() => {
     const fetchSelectedGenres = async () => {
-      if (user) {
+    if (user) {
+      try {
         const userDoc = await getDoc(doc(firestore, "users", user.uid));
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          setSelected(userData.genres || []);
+          const genres = userData.genres || [];
+          setSelected(genres); // Update state directly
+        } else {
+          console.warn("No genres found for this user.");
+          setSelected([]); // Set to empty array if no genres are found
         }
+      } catch (error) {
+        console.error("Error fetching genres from Firestore:", error);
+        setSelected([]); // Set to empty array on error
       }
-    };
+    }
+  };
 
     const fetchPurchased = async() => {
       if (user) {
@@ -109,14 +117,14 @@ function GenreView() {
     //  const storedGenres = JSON.parse(localStorage.getItem(`${user?.uid}-genres`))  || [];
     //  setSelected(storedGenres);
     //}
-  }, [user, setSelected, setPurchased])
+  }, [user, setSelected, setPurchased, selectedGenres, purchased])
 
   useEffect(() => {
     if (user) {
       const storedCartItems = JSON.parse(localStorage.getItem(`${user.uid}-cart`)) || [];
       setCartItems(storedCartItems);
     }
-  }, [user]);  // Only run this effect when the user changes (on login or reload)  
+  }, []);  // Only run this effect when the user changes (on login or reload)  
 
   //const markAsPurchased = (movie) => {
   //  if (!purchased.includes(movie.id)) {

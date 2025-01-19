@@ -10,7 +10,8 @@ function SettingsView() {
   const {
     setCurrentGenre,
     setSelected, user,
-    purchased, cartItems
+    purchased, cartItems,
+    setPurchased
   } = useStoreContext();
 
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ function SettingsView() {
   const newLast = useRef();
   const [firstName, setFirst] = useState("");
   const [lastName, setLast] = useState("");
+
+  const [loading, setLoading] = useState(true);
 
   const genres = [
     { genre: "Action", id: 28 },
@@ -66,8 +69,19 @@ function SettingsView() {
       }
     };
 
+    const fetchPurchases = async () => {
+      if (user) {
+          const docRef = doc(firestore, "users", user.uid, "data", "purchased");
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+              setPurchased(docSnap.data().purchased);
+          }
+      }
+    };
+    setLoading(false);
+    fetchPurchases();
     loadGenres();
-  }, [user]);
+  }, [user, setPurchased]);
 
   const firstNameChange = () => {
     setChangeFirst(!changedFirst);
@@ -111,6 +125,10 @@ function SettingsView() {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   return (

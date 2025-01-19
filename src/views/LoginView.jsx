@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStoreContext } from "../context/GlobalState";
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../firebase';
+import { firestore } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 import './LoginView.css';
 
 function LoginView() {
-    const { setUser, user, selectedGenres } = useStoreContext();
+    const { setUser, user, setSelected, setPurchased, setCartItems } = useStoreContext();
     //const enteredPassword = useRef("");
     const enteredEmail = useRef("");
     const [password, setPassword] = useState('');
@@ -29,15 +31,53 @@ function LoginView() {
     }
 
     async function loginByGoogle() {
+
         try {
           const user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
-          navigate('/movies/all');
+          navigate('/movies');
           setUser(user);
         } catch (error) {
           console.log(error);
           alert("Error signing in!");
         }
       }
+
+    useEffect(() => {
+      const fetchSelectedGenres = async () => {
+        if (user) {
+          const userDoc = await getDoc(doc(firestore, "users", user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setSelected(userData.genres || []);
+          }
+        }
+      };
+  
+      const fetchPurchased = async() => {
+        if (user) {
+          const docRef = doc(firestore, "users", user.uid, "data", "purchased");
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setPurchased(docSnap.data().purchased);
+          }
+        }
+      };
+  
+      fetchSelectedGenres();
+      fetchPurchased();
+  
+      //if (selectedGenres.length === 0 && user) {
+      //  const storedGenres = JSON.parse(localStorage.getItem(`${user?.uid}-genres`))  || [];
+      //  setSelected(storedGenres);
+      //}
+    }, [user, setSelected, setPurchased])
+  
+    useEffect(() => {
+      if (user) {
+        const storedCartItems = JSON.parse(localStorage.getItem(`${user.uid}-cart`)) || [];
+        setCartItems(storedCartItems);
+      }
+    }, [user]);  // Only run this effect when the user changes (on login or reload)  
 
 //    function login(event) {
 //        event.preventDefault();
@@ -70,6 +110,7 @@ function LoginView() {
                     <button type="submit" className="login-button">Login</button>
                 </form>
                 <p className="register-link">New to Notflix? <a href="/register">Register Now</a></p>
+                <button onClick={() => loginByGoogle()} className="login-button">Login by Google</button>            
             </div>
         </div>
     );
