@@ -9,7 +9,8 @@ import "./SettingsView.css";
 function SettingsView() {
   const {
     setCurrentGenre,
-    setSelected, user
+    setSelected, user,
+    purchased, cartItems
   } = useStoreContext();
 
   const navigate = useNavigate();
@@ -178,6 +179,21 @@ function SettingsView() {
           </div>
           <button className="submit" type="submit">Submit Changes</button>
         </form>
+        )}
+        {purchased.length > 0 && (
+          <div className="purchased-movies">
+              <h3>Purchased Movies:</h3>
+              <ul className="purchased-movies-list">
+                  {purchased.map((id) => {
+                      const purchasedMovie = cartItems.find((movie) => movie.id === id);
+                      return (
+                          <li key={id}>
+                              {purchasedMovie ? purchasedMovie.title : `Title: ${id}`}
+                          </li>
+                      );
+                  })}
+              </ul>
+          </div>
         )}
       </div>
     </>
