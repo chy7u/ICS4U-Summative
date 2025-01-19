@@ -51,11 +51,6 @@ function CartView() {
 
             await setDoc(docRef, { purchased: updatedPurchased }, { merge: true });
 
-            localStorage.setItem(
-                `${user.uid}-purchased`,
-                JSON.stringify(updatedPurchased)
-            );
-
             localStorage.removeItem(
                 `${user.uid}-cart`
             );
@@ -108,21 +103,6 @@ function CartView() {
                     </button>
                 </div>
                 </>
-            )}
-            {purchased.length > 0 && (
-                <div className="purchased-movies">
-                    <h3>Purchased Movies:</h3>
-                    <ul className="purchased-movies-list">
-                        {purchased.map((id) => {
-                            const purchasedMovie = cartItems.find((movie) => movie.id === id);
-                            return (
-                                <li key={id}>
-                                    {purchasedMovie ? purchasedMovie.title : `Title: ${id}`}
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </div>
             )}
         </div>
     );
