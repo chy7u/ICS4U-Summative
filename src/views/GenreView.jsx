@@ -4,7 +4,7 @@ import { useParams, Link } from "react-router-dom";
 import { useStoreContext } from "../context/GlobalState";
 import { auth } from "../firebase";
 import { firestore } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import "./GenreView.css";
 
 function GenreView() {
@@ -83,11 +83,22 @@ function GenreView() {
   };
 
   useEffect(() => {
-    if (selectedGenres.length === 0 && user) {
-      const storedGenres = JSON.parse(localStorage.getItem(`${user?.uid}-genres`))  || [];
-      setSelected(storedGenres);
-    }
-  }, [selectedGenres, setSelected])
+    const fetchSelectedGenres = async () => {
+      if (user) {
+        const userDoc = await getDoc(doc(firestore, "users", user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setSelected(userData.genres || []);
+        }
+      }
+    };
+    fetchSelectedGenres();
+
+    //if (selectedGenres.length === 0 && user) {
+    //  const storedGenres = JSON.parse(localStorage.getItem(`${user?.uid}-genres`))  || [];
+    //  setSelected(storedGenres);
+    //}
+  }, [user, setSelected, firestore, selectedGenres])
 
   useEffect(() => {
     if (user) {

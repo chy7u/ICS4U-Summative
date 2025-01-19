@@ -75,9 +75,12 @@ function RegisterView() {
       //doc to firestore for genres
       const docRef = doc(firestore, "users", user.uid);
       //save genres directly
-      await setDoc(docRef, { genres: selectedGenres });
+      await setDoc(docRef, { 
+        genres: selectedGenres, 
+        purchased: []
+       });
 
-      localStorage.setItem(`${user.uid}-genres`, JSON.stringify(selectedGenres));
+      //localStorage.setItem(`${user.uid}-genres`, JSON.stringify(selectedGenres));
       setSelected(selectedGenres);
       navigate('/movies');
     } catch (error) {
@@ -116,9 +119,12 @@ function RegisterView() {
       //doc to firestore for genres
       const docRef = doc(firestore, "users", user.uid);
       //save genres directly
-      await setDoc(docRef, { genres: selectedGenres });
+      await setDoc(docRef, { 
+        genres: selectedGenres,
+        purchased: []
+      });
 
-      localStorage.setItem(`${user.uid}-genres`, JSON.stringify(selectedGenres));
+      //localStorage.setItem(`${user.uid}-genres`, JSON.stringify(selectedGenres));
       setSelected(selectedGenres);
       navigate('/movies');
     } catch {
