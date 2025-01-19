@@ -15,7 +15,6 @@ function GenreView() {
   } = useStoreContext();
 
   const { id } = useParams();
-  console.log("Genre ID:", id);
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -92,13 +91,25 @@ function GenreView() {
         }
       }
     };
+
+    const fetchPurchased = async() => {
+      if (user) {
+        const docRef = doc(firestore, "users", user.uid, "data", "purchased");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setPurchased(docSnap.data().purchased);
+        }
+      }
+    };
+
     fetchSelectedGenres();
+    fetchPurchased();
 
     //if (selectedGenres.length === 0 && user) {
     //  const storedGenres = JSON.parse(localStorage.getItem(`${user?.uid}-genres`))  || [];
     //  setSelected(storedGenres);
     //}
-  }, [user, setSelected, firestore, selectedGenres])
+  }, [user, setSelected, setPurchased])
 
   useEffect(() => {
     if (user) {
@@ -106,8 +117,6 @@ function GenreView() {
       setCartItems(storedCartItems);
     }
   }, [user]);  // Only run this effect when the user changes (on login or reload)  
-
-  console.log(cartItems);
 
   //const markAsPurchased = (movie) => {
   //  if (!purchased.includes(movie.id)) {

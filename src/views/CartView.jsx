@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStoreContext } from "../context/GlobalState";
 import { firestore } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import "./CartView.css";
 
 function CartView() {
@@ -16,21 +16,30 @@ function CartView() {
         setCartItems(updatedCart);
         localStorage.setItem(`${user.uid}-cart`, JSON.stringify(updatedCart));
     }
-    console.log(cartItems);
 
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (user) {
-          const storedCartItems = JSON.parse(localStorage.getItem(`${user.uid}-cart`)) || [];
-          setCartItems(storedCartItems);
-          setLoading(false);
-        }
-    }, [user]);  // Only run this effect when the user changes (on login or reload)  
+        const fetchPurchases = async () => {
+            if (user) {
+                const storedCartItems = JSON.parse(localStorage.getItem(`${user.uid}-cart`)) || [];
+                setCartItems(storedCartItems);
+
+                const docRef = doc(firestore, "users", user.uid, "data", "purchased");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setPurchased(docSnap.data().purchased);
+                }
+
+                setLoading(false);
+            }
+        };
+        fetchPurchases();
+    }, [user, setPurchased]);  // Only run this effect when the user changes (on login or reload)  
 
     const checkout = async () => {
         try {
-            const docRef = doc(firestore, "users", user.uid);
+            const docRef = doc(firestore, "users", user.uid, "data", "purchased");
     
             // Save cartItems directly since it's a plain array
 
@@ -116,7 +125,7 @@ function CartView() {
                 </div>
             )}
         </div>
-    )
+    );
 }
 
 export default CartView;

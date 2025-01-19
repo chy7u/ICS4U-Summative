@@ -8,7 +8,7 @@ import "./MoviesView.css";
 
 function MoviesView() {
     const { 
-        genreList, loggedIn
+        genre, loggedIn
     } = useStoreContext();
 
     useEffect(() => {
@@ -23,7 +23,7 @@ function MoviesView() {
             <div className="movies-view-container">
                 <div className="main-container">
                     <aside className="genre-list">
-                        <Genres genresList={genreList}/>
+                        <Genres genresList={genre}/>
                     </aside>
                     <main className="genre-movies">
                         <Outlet/>

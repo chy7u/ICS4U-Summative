@@ -8,8 +8,6 @@ import "./SettingsView.css";
 
 function SettingsView() {
   const {
-    firstName, setFirst,
-    lastName, setLast,
     setCurrentGenre,
     setSelected, user
   } = useStoreContext();
@@ -20,9 +18,8 @@ function SettingsView() {
   const [changedLast, setChangeLast] = useState(false);
   const newFirst = useRef();
   const newLast = useRef();
-  const [email, setEmail] = useState("");
-  const [changedFirstName, setChangedFirst] = useState("");
-  const [changedLastName, setChangedLast] = useState("");
+  const [firstName, setFirst] = useState("");
+  const [lastName, setLast] = useState("");
 
   const genres = [
     { genre: "Action", id: 28 },
@@ -106,7 +103,7 @@ function SettingsView() {
       const docRef = doc(firestore, "users", user.uid);
       await setDoc(docRef, { genres: selectedGenres }, { merge: true });
 
-      localStorage.setItem(`${user.uid}-genres`, JSON.stringify(selectedGenres));
+      //localStorage.setItem(`${user.uid}-genres`, JSON.stringify(selectedGenres));
       setSelected(selectedGenres);
 
       navigate(`/movies`);

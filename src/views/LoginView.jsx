@@ -7,11 +7,13 @@ import { auth } from '../firebase';
 import './LoginView.css';
 
 function LoginView() {
-    const { setUser, user } = useStoreContext();
+    const { setUser, user, selectedGenres } = useStoreContext();
     //const enteredPassword = useRef("");
     const enteredEmail = useRef("");
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+
+    console.log(user);
 
     async function loginByEmail(event) {
         event.preventDefault();

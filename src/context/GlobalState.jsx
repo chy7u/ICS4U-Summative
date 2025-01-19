@@ -1,82 +1,75 @@
-import { createContext, useState, useContext, useEffect } from "react";
-import { Map } from 'immutable';
+import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, firestore } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { Map } from "immutable";
+import React from "react";
 
-//creates context
-export const StoreContext = createContext();
+const StoreContext = React.createContext();
 
-//provider components.. children is the props
 export const StoreProvider = ({ children }) => {
-    //states to keep track of where user is
-    //const [loggedIn, setLoggedIn] = useState(false);
-    //user info
-    const [firstName, setFirst] = useState("");
-    const [lastName, setLast] = useState("");
-    //const [email, setEmail] = useState("");
-    //const [password, setPass] = useState("");
-    //cart
-    const [cartItems, setCartItems] = useState(Map());
-    const [purchased, setPurchased] = useState(Map());
-    //genres
-    const [genres, setGenres] = useState([]);
-    const [selectedGenres, setSelected] = useState([]);
-    const [selectedGenreNames, setSelectedNames] = useState([]);
-    const [currentGenre, setCurrentGenre] = useState([]);
-    //user for firebase
-    const [user, setUser] = useState(null);
-    const [cart, setCart] = useState(Map());
-    const [loading, setLoading] = useState(true);
+  const [purchased, setPurchased] = useState(Map());
+  const [genres, setGenres] = useState([]);
+  const [selectedGenres, setSelected] = useState([]);
+  const [selectedGenreNames, setSelectedNames] = useState([]);
+  const [currentGenre, setCurrentGenre] = useState([]);
+  const [user, setUser] = useState(null);
+  const [cart, setCart] = useState(Map());
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                setUser(user);
-                const sessionCart = localStorage.getItem(user.uid);
-                if (sessionCart) {
-                    setCart(Map(JSON.parse(sessionCart)));
-                }
+  useEffect(() => {
+    const fetchFirestoreData = async (user) => {
+      try {
+        const purchasedDocRef = doc(firestore, "users", user.uid, "data", "purchased");
+        const purchasedDocSnap = await getDoc(purchasedDocRef);
+        if (purchasedDocSnap.exists()) {
+          setPurchased(Map(purchasedDocSnap.data()));
+        }
 
-                const storedPurchasedItems = JSON.parse(localStorage.getItem(`${user?.uid}-purchased`)) || [];
-                setPurchased(storedPurchasedItems);
+        const genresDocRef = doc(firestore, "users", user.uid, "data", "genres");
+        const genresDocSnap = await getDoc(genresDocRef);
+        if (genresDocSnap.exists()) {
+          setGenres(genresDocSnap.data().genres);
+          setSelected(genresDocSnap.data().genres);
+        }
+      } catch (error) {
+        console.error("Error fetching data from Firestore:", error);
+      }
+    };
 
-                const storedGenres = JSON.parse(localStorage.getItem(`${user?.uid}-genres`)) || [];
-                setSelected(storedGenres);
-            }
-            setLoading(false);
-        });
-    }, [user, setSelected])
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUser(user);
+        const sessionCart = localStorage.getItem(user.uid);
+        if (sessionCart) {
+          setCart(Map(JSON.parse(sessionCart)));
+        }
 
-    if (loading) {
-        return <h1>Loading...</h1>
-    }
+        await fetchFirestoreData(user);
+      }
+      setLoading(false);
+    });
+  }, [setSelected]);
 
-    return (
-        //value is initial values
-        <StoreContext.Provider value={{
-            user, setUser,
-            cart, setCart,
-            cartItems, setCartItems, 
-            genres, setGenres, 
-            selectedGenres, setSelected,
-            selectedGenreNames, setSelectedNames,
-            currentGenre, setCurrentGenre,
-            purchased, setPurchased, 
-            firstName, setFirst,
-            lastName, setLast,
-            loading, setLoading
-            //loggedIn, //setLoggedIn
-            //sets these states as values inside the context
-        }}>
-            {children}
-        </StoreContext.Provider>
-        //wraps the children inside the Provider, can be
-        //used globally
-    );
-}
-//creates variable useStoreContext
-//function that returns whatever child is called,
-//from the StoreContext
-export const useStoreContext = () => {
-    return useContext(StoreContext);
-}
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+
+  return (
+    <StoreContext.Provider value={{
+      user, setUser,
+      cart, setCart,
+      genres, setGenres,
+      selectedGenres, setSelected,
+      selectedGenreNames, setSelectedNames,
+      currentGenre, setCurrentGenre,
+      purchased, setPurchased,
+      cartItems, setCartItems
+    }}>
+      {children}
+    </StoreContext.Provider>
+  );
+};
+
+export const useStoreContext = () => React.useContext(StoreContext);

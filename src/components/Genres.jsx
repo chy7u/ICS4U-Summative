@@ -7,8 +7,6 @@ import "./Genres.css";
 function Genres() {
   const { selectedGenres, selectedGenreNames, setCurrentGenre, user, setSelected } = useStoreContext();
 
-  console.log(selectedGenres);
-  console.log(selectedGenreNames);
   return (
     <div>
       <ul className="genres">
